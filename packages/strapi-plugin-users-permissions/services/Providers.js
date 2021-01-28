@@ -124,6 +124,55 @@ const getProfile = async (provider, query, callback) => {
     .get();
 
   switch (provider) {
+    case 'cas': {
+      const provider_url = 'https://' + _.get(grant['cas'], 'subdomain');
+      const cas = purest({
+        provider: 'cas',
+        config: {
+          cas: {
+            [provider_url]: {
+              __domain: {
+                auth: {
+                  auth: { bearer: '[0]' },
+                },
+              },
+              '{endpoint}': {
+                __path: {
+                  alias: '__default',
+                },
+              },
+            },
+          },
+        },
+      });
+      cas
+        .query()
+        .get('oidc/profile')
+        .auth(access_token)
+        .request((err, res, body) => {
+          if (err) {
+            callback(err);
+          } else {
+            const username =
+              body.strapiusername ||
+              body.username ||
+              body.nickname ||
+              body.uid ||
+              body.name;
+            const email =
+              body.strapiemail ||
+              body.email ||
+              body.mail ||
+              `${username.replace(/\s+/g, '.')}@strapi.io`;
+
+            callback(null, {
+              username,
+              email,
+            });
+          }
+        });
+      break;
+    }
     case 'discord': {
       const discord = purest({
         provider: 'discord',
