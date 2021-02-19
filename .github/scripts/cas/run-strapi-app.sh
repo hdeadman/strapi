@@ -4,7 +4,7 @@ set -e
 export NODE_ENV=production
 export PATH=./node_modules/.bin:$PATH
 export PROJECT_NAME=cas-test-project
-strapi new $PROJECT_NAME --quickstart --no-run
+strapi new $PROJECT_NAME --quickstart --debug --no-run
 
 mkdir -p $PROJECT_NAME/extensions/user-permissions/config/functions
 mkdir -p $PROJECT_NAME/extensions/user-permissions/services
