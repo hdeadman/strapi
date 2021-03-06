@@ -153,9 +153,7 @@ const getProfile = async (provider, query, callback) => {
           if (err) {
             callback(err);
           } else {
-            console.log('CAS Response Body: ' + JSON.stringify(body));
             // CAS attribute may be in body.attributes or "FLAT", depending on CAS config
-            // CAS
             const username = body.attributes
               ? body.attributes.strapiusername || body.sub
               : body.strapiusername || body.id || body.sub;
@@ -164,7 +162,7 @@ const getProfile = async (provider, query, callback) => {
               : body.strapiemail || body.email;
             if (!username || !email) {
               console.log(
-                'CAS Response Body did not contain rqeuired attributes: ' + JSON.stringify(body)
+                'CAS Response Body did not contain required attributes: ' + JSON.stringify(body)
               );
             }
             callback(null, {
